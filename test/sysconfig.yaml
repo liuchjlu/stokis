@@ -1,0 +1,7 @@
+  K8sServer: http://192.168.12.40:8080
+  EvaluateServer: http://192.168.12.40:80/evaluate/grade
+  FtpAddress: 192.168.12.40:21
+  ImgRepository: 192.168.12.40:5000
+  LogSize: 50
+  PodScriptPath: /
+  LogAddress: /tmp/stokis.log

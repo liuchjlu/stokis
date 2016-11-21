@@ -1,0 +1,19 @@
+#!/bin/sh
+chmod a+x {{.ScriptPath}}
+/bin/sh {{.ScriptPath}}
+
+ftp -n -i <<-EOF
+open  {{.FtpServer}}
+user  {{.UserName}} {{.PassWord}}
+binary
+hash
+mkdir {{.ProjectType}}
+cd {{.ProjectType}}
+mkdir {{.TeamName}}
+cd {{.TeamName}}
+mkdir {{.Version}}
+cd {{.Version}}
+lcd /results/
+mput *
+bye
+EOF

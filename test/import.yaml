@@ -1,0 +1,16 @@
+TeamInfo:
+	  TeamID: 001
+	  TeamName:	liucaihong
+ProjectInfo:
+	  ProjectVersion: V1
+		DataVersion: V1
+	  ProjectType: faceRecognition
+	  WorkPath: /home/liuch
+	  ScriptPath: /start.sh
+	  ResultPath: /result
+	  OS: centos
+Frame:
+	  FrameType: tensorflow
+	  ComputeType: gpu
+	  WorkerNums: 1
+	  PsNums: 1
