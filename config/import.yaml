@@ -2,10 +2,10 @@ TeamInfo:
   TeamID: 001
   TeamName: liucaihong
 ProjectInfo:
-  ProjectVersion: V1
-  DataVersion: V1
+  ProjectVersion: v1
+  DataVersion: v1
   ProjectType: facerecognition
-  WorkPath: /user/lib/golang/src/github.com/liuchjlu/stokis/test/
+  WorkPath: /user/lib/golang/src/github.com/liuchjlu/stokis/test
   ScriptPath: /user/lib/golang/src/github.com/liuchjlu/stokis/test/start.sh
   ResultPath: /result
   OS: centos7

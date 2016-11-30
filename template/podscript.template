@@ -1,6 +1,36 @@
 #!/bin/sh
+mkdir {{.ResultPath}}
 chmod a+x {{.ScriptPath}}
 /bin/sh {{.ScriptPath}}
+
+ftp -n -i <<-EOF
+open  {{.FtpServerBak}}
+user  {{.UserNameBak}} {{.PassWordBak}}
+binary
+hash
+mkdir {{.ProjectType}}
+cd {{.ProjectType}}
+mkdir {{.TeamName}}
+cd {{.TeamName}}
+mkdir {{.Version}}
+cd {{.Version}}
+lcd {{.ResultPath}}
+mput *
+bye
+EOF
+
+cd {{.ResultPath}}
+size=0
+for f in `ls`
+do
+let size=`stat -c %s $f`
+if [ $size -gt 52428800 ]
+then
+echo The size of $f is bigger than 50Mb.
+rm -rf $f
+fi
+done
+
 
 ftp -n -i <<-EOF
 open  {{.FtpServer}}
@@ -13,7 +43,7 @@ mkdir {{.TeamName}}
 cd {{.TeamName}}
 mkdir {{.Version}}
 cd {{.Version}}
-lcd /results/
+lcd {{.ResultPath}}
 mput *
 bye
 EOF

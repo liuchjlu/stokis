@@ -1,4 +1,3 @@
-// manage project manage.go
 package main
 
 import (
@@ -7,10 +6,11 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/liuchjlu/stokis/cli"
+	"github.com/liuchjlu/stokis/global"
 )
 
 func main() {
-	logFilename := "/tmp/stokis.log"
+	logFilename := global.Logpath
 	logFile, _ := os.OpenFile(logFilename, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 	defer logFile.Close()
 
@@ -21,9 +21,11 @@ func main() {
 	fileAndStdoutWriter := io.MultiWriter(writers...)
 
 	log.SetOutput(fileAndStdoutWriter)
+//	log.SetLevel(log.InfoLevel)
 	log.SetLevel(log.DebugLevel)
-
 	log.Infoln("main.main():Start Stokis Main")
 
 	cli.Run()
+	return
 }
+

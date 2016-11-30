@@ -8,15 +8,19 @@ import (
 )
 
 type SysConfig struct {
-	K8sServer      string `K8sServer`
-	EvaluateServer string `EvaluateServer`
-	FtpAddress     string `FtpAddress`
-	FtpUser        string `FtpUser`
-	FtpPasswd      string `FtpPasswd`
-	ImgRepository  string `ImgRepository`
-	LogSize        string `LogSize` //单位为Mb
-	PodScriptPath  string `PodScriptPath`
-	ResultAddress  string `ResultAddress`
+	K8sServer     	  string `K8sServer`
+	EvaluateServer    string `EvaluateServer`
+	FtpAddress        string `FtpAddress`
+	FtpUser           string `FtpUser`
+	FtpPasswd     	  string `FtpPasswd`
+	FtpAddressBak     string `FtpAddressBak`
+        FtpUserBak        string `FtpUserBak`
+        FtpPasswdBak      string `FtpPasswdBak`
+	ImgRepository     string `ImgRepository`
+	LogSize           string `LogSize` //单位为Mb
+	PodScriptPath     string `PodScriptPath`
+	ResultAddress     string `ResultAddress`
+	PodLogAddress     string `PodLogAddress`
 }
 type UserConfig struct {
 	MaxCommitNum string `MaxCommitNum`

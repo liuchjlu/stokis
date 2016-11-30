@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"github.com/liuchjlu/combine/ftp"
-	"github.com/liuchjlu/combine/ftpclient"
+	log "github.com/Sirupsen/logrus"
+	"github.com/liuchjlu/stokis/ftp"
+	"github.com/liuchjlu/stokis/ftpclient"
 	"io"
 	"io/ioutil"
 	"os"
@@ -18,7 +19,9 @@ func checkFileIsExist(filename string) bool {
 	}
 	return exist
 }
-
+func SimpleSimplifynil(s string) string {
+	return strings.Join(strings.Fields(strings.TrimSpace(s)), "")
+}
 func GetResult() {
 	var err error
 	var ftp *goftp.FTP
@@ -27,7 +30,7 @@ func GetResult() {
 		panic(err)
 	}
 	defer ftp.Close()
-	fmt.Println("Successfully onnected to", server)
+	log.Infoln("build connection success.")
 	if err = ftp.Login(SysConfig.FtpUser, SysConfig.FtpPasswd); err != nil {
 		panic(err)
 	}
@@ -37,39 +40,49 @@ func GetResult() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("files:", files)
-	var names []string
+	var names []string //list of line
 	for _, line := range files {
 		name := strings.Split(line, " ")[len(strings.Split(line, " "))-1]
 		names = append(names, name)
 	}
-	fmt.Println(names)
 
-	conn, err := ftpclient.DialTimeout(server, 5*time.Second)
-	if err != nil {
-		return
-	}
-	defer conn.Quit()
-	err = conn.Login(SysConfig.FtpUser, SysConfig.FtpPasswd)
-	if err != nil {
-		return
-	}
-	for nm := range names {
-		file := Path + "/" + nm
-		data, _ := conn.Retr(file)
-		buf, _ := ioutil.ReadAll(data)
-		var f *os.File
-		if checkFileIsExist(SysConfig.ResultAddress + "/" + nm) { //如果文件存在
-			f, _ = os.OpenFile(SysConfig.ResultAddress+nm, os.O_APPEND, 0666) //打开文件
-		} else {
-			f, _ = os.Create(SysConfig.ResultAddress + nm) //创建文件
-		}
-		_, err = io.WriteString(f, string(buf))
+	var buf []byte
+	var file string
+	var data io.Reader
+	var conn *ftpclient.ServerConn
+	var f *os.File
+
+	for _, nm := range names {
+		nm = SimpleSimplifynil(nm)
+		file = Path + "/" + nm
+		//build connection to ftp
+		conn, err = ftpclient.DialTimeout(server, 5*time.Second)
 		if err != nil {
 			return
 		}
+		err = conn.Login(SysConfig.FtpUser, SysConfig.FtpPasswd)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer conn.Quit()
+		//get data from ftp
+		data, _ = conn.Retr(file)
+		buf, _ = ioutil.ReadAll(data)
+		if checkFileIsExist(SysConfig.ResultAddress + nm) {
+			//	fmt.Println("file exist")
+			f, _ = os.OpenFile(SysConfig.ResultAddress+nm, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+		} else {
+			//	fmt.Println("file don't exist,creating.")
+			f, _ = os.Create(SysConfig.ResultAddress + nm)
+		}
+		_, err = io.WriteString(f, string(buf))
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		f.Close()
 	}
-
-	//fmt.Println(string(buf))
-
+	log.Infoln("cli.Getresult(): Result completed download with the path:", SysConfig.ResultAddress)
+	return
 }

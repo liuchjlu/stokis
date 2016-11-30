@@ -1,26 +1,36 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{.TeamName}}-{{.ProjectType}}{{.WorkerID}}
+  name: {{.TeamName}}-{{.ProjectType}}-{{.ProjectVersion}}-{{.WorkerID}}
 spec:
   template:
     spec:
       containers:
-      - name: {{.TeamName}}-{{.ProjectType}}{{.WorkerID}}
+      - name: {{.TeamName}}-{{.ProjectType}}-{{.ProjectVersion}}-{{.WorkerID}}
         image: {{.DockerImage}}
+        env:
+        - name: "DataVersion"
+          value: {{.DataVersion}}
+        - name: "ResultPath"
+          value: {{.ResultPath}}
         args:
           - --cluster_spec={{.ClusterSpec}}
           - --job_name=worker
           - --task_id={{.WorkerID}}
         ports:
         - containerPort: 2222
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+	resources:
+          limits:
+	    alpha.kubernetes.io/nvidia-gpu: {{.GpuNm}}
+	  requests:
+            alpha.kubernetes.io/nvidia-gpu: {{.GpuNm}}
         command: ["/bin/bash", "/start.sh"]
         volumeMounts:
         - name: shared
-          mountPath: /shared
+          mountPath: /stokis/data
       volumes:
       - name: shared
         hostPath:
-          path: /shared
+          path: /stokis/data
       restartPolicy: Never

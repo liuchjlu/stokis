@@ -3,7 +3,7 @@ FROM {{.Repository}}/{{.Framework}}-{{.Genre}}:{{.Os}}
 MAINTAINER Aaron liu "254311953@qq.com"
 
 RUN mkdir -p {{.Workpath}}:
-COPY {{.Workpath}} {{.Workpath}}
+COPY ./ {{.Workpath}}
 COPY {{.Scriptpath}}  {{.PodScriptpath}}
 
 RUN chmod a+x {{.PodScriptpath}} 

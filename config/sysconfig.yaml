@@ -1,9 +1,13 @@
-  K8sServer: http://192.168.11.52:8080
-  EvaluateServer: http://192.168.12.41:80/evaluate/grade/
+  K8sServer: --server=192.168.11.52:8080
+  EvaluateServer: http://192.168.12.41:8000/evaluate/grade/
   FtpAddress: 192.168.11.51:21
   FtpUser: stokis
   FtpPasswd: 111111
+  FtpAddressBak: 192.168.11.51:21
+  FtpUserBak: stokis
+  FtpPasswdBak: 111111
   ImgRepository: 192.168.11.51:5000
   LogSize: 50
   PodScriptPath: /start.sh
-  ResultAddress: /tmp/
+  ResultAddress: /stokis/results/
+  PodLogAddress: /stokis/podlogs/
